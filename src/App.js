@@ -2,18 +2,7 @@ import React from 'react';
 import './App.css';
 import {Homepage} from "./pages/hompage.component";
 import  { Route, Switch } from "react-router-dom";
-
-const HatsPage = () => {
-    return (
-        <h1>Hats Page</h1>
-    )
-}
-
-const HatsDetailPage = props => {
-    return (
-        <h1>Hats Page {props.match.params.hatId}</h1>
-    )
-}
+import Shop from "./pages/shop/shop";
 
 const PageNotFound = () => {
     return (
@@ -26,8 +15,7 @@ function App() {
     <div>
         <Switch>
             <Route exact path='/' component={Homepage}/>
-            <Route exact path='/hats' component={HatsPage}/>
-            <Route path='/hats/:hatId' component={HatsDetailPage}/>
+            <Route exact path='/shop' component={Shop} />
             <Route path='*'>
                 <PageNotFound />
             </Route>
