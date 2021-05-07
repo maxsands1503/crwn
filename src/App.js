@@ -5,6 +5,7 @@ import  { Route, Switch } from "react-router-dom";
 import Shop from "./pages/shop/shop";
 import Header from "./components/header/header";
 import SignInAndSignUp from "./pages/signin/sign-in-and-sign-up";
+import { auth } from './firebase/firebase.utils';
 
 const PageNotFound = () => {
     return (
@@ -12,23 +13,46 @@ const PageNotFound = () => {
     )
 }
 
-function App() {
-  return (
-    <div>
-        <Header />
-        <Switch>
-            <Route exact path='/' component={Homepage}/>
-            <Route exact path='/shop' component={Shop} />
-            <Route exact path='/signin' component={SignInAndSignUp} />
-            <Route path='*'>
-                <PageNotFound />
-            </Route>
-        </Switch>
+class App extends React.Component {
 
+    unsubscribeFromAuth = null;
 
+    constructor() {
+        super();
+        this.state = {
+            currentUser: null
+        };
+    }
 
-    </div>
-  );
+    componentDidMount() {
+        this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
+            console.log(user)
+            this.setState({currentUser: user});
+        })
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribeFromAuth) {
+            this.unsubscribeFromAuth();
+        }
+
+    }
+
+    render(){
+        return(
+            <div>
+                <Header currentUser={this.state.currentUser} />
+                <Switch>
+                    <Route exact path='/' component={Homepage}/>
+                    <Route exact path='/shop' component={Shop}/>
+                    <Route exact path='/signin' component={SignInAndSignUp}/>
+                    <Route path='*'>
+                        <PageNotFound/>
+                    </Route>
+                </Switch>
+            </div>
+        );
+    }
 }
 
 export default App;
